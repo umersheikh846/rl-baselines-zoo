@@ -12,3 +12,8 @@ try:
     import mocca_envs  # pytype: disable=import-error
 except ImportError:
     mocca_envs = None
+
+try:
+    import gym_btc  # pytype: disable=import-error
+except ImportError:
+    gym_btc = None
