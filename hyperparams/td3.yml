@@ -11,6 +11,14 @@ Pendulum-v0:
   noise_std: 0.1
   learning_starts: 1000
 
+BtcEnvPred-v1:
+  n_timesteps: !!float 3e5
+  policy: 'MlpPolicy'
+  batch_size: 256
+  learning_starts: 1000
+  noise_type: 'ornstein-uhlenbeck'
+  noise_std: 0.1
+
 BtcEnvPred-v0:
   n_timesteps: !!float 3e5
   policy: 'MlpPolicy'

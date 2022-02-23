@@ -13,6 +13,19 @@ atari:
 
 BtcEnvPred-v0:
   env_wrapper: utils.wrappers.NormalizeActionWrapper
+  n_envs: 10
+  n_timesteps: !!float 2e6
+  policy: 'MlpPolicy'
+  n_steps: 2048
+  nminibatches: 32
+  lam: 0.95
+  gamma: 0.99
+  noptepochs: 10
+  ent_coef: 0.01
+  learning_rate: !!float 3e-4
+  cliprange: 0.2
+
+BtcEnvPred-v1:
   n_envs: 8
   n_timesteps: !!float 2e6
   policy: 'MlpPolicy'
@@ -21,7 +34,7 @@ BtcEnvPred-v0:
   lam: 0.95
   gamma: 0.99
   noptepochs: 10
-  ent_coef: 0.0
+  ent_coef: 0.01
   learning_rate: !!float 3e-4
   cliprange: 0.2
 

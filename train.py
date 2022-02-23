@@ -41,13 +41,13 @@ from utils.utils import StoreDict
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env', type=str, default="CartPole-v1", help='environment ID')
+    parser.add_argument('--env', type=str, default="BtcEnvPred-v0", help='environment ID')
     parser.add_argument('-tb', '--tensorboard-log', help='Tensorboard log dir', default='', type=str)
     parser.add_argument('-i', '--trained-agent', help='Path to a pretrained agent to continue training',
                         default='', type=str)
     parser.add_argument('--algo', help='RL Algorithm', default='ppo2',
                         type=str, required=False, choices=list(ALGOS.keys()))
-    parser.add_argument('-n', '--n-timesteps', help='Overwrite the number of timesteps', default=-1,
+    parser.add_argument('--ntimes', dest='n_timesteps', help='Overwrite the number of timesteps', default=-1,
                         type=int)
     parser.add_argument('--log-interval', help='Override log interval (default: -1, no change)', default=-1,
                         type=int)
@@ -59,10 +59,10 @@ if __name__ == '__main__':
                         default=-1, type=int)
     parser.add_argument('-f', '--log-folder', help='Log folder', type=str, default='logs')
     parser.add_argument('--seed', help='Random generator seed', type=int, default=0)
-    parser.add_argument('--n-trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
-    parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=False,
+    parser.add_argument('--ntrials', dest='n_trials', help='Number of trials for optimizing hyperparameters', type=int, default=10)
+    parser.add_argument('-optimize', '--optimize-hyperparameters', action='store_true', default=True,
                         help='Run hyperparameters search')
-    parser.add_argument('--n-jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
+    parser.add_argument('--njobs', dest='n_jobs', help='Number of parallel jobs when optimizing hyperparameters', type=int, default=1)
     parser.add_argument('--sampler', help='Sampler to use when optimizing hyperparameters', type=str,
                         default='tpe', choices=['random', 'tpe', 'skopt'])
     parser.add_argument('--pruner', help='Pruner to use when optimizing hyperparameters', type=str,
@@ -78,11 +78,10 @@ if __name__ == '__main__':
     parser.add_argument('--env-kwargs', type=str, nargs='+', action=StoreDict,
                         help='Optional keyword argument to pass to the env constructor')
     args = parser.parse_args()
-
+    
     # Going through custom gym packages to let them register in the global registory
     for env_module in args.gym_packages:
         importlib.import_module(env_module)
-
     env_id = args.env
     registered_envs = set(gym.envs.registry.env_specs.keys())
 
@@ -128,7 +127,8 @@ if __name__ == '__main__':
     print("Seed: {}".format(args.seed))
 
     # Load hyperparameters from yaml file
-    with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
+    # with open('hyperparams/{}.yml'.format(args.algo), 'r') as f:
+    with open(os.path.dirname(__file__)+'/hyperparams/{}.yml'.format(args.algo), 'r') as f:
         hyperparams_dict = yaml.safe_load(f)
         if env_id in list(hyperparams_dict.keys()):
             hyperparams = hyperparams_dict[env_id]
